@@ -39,7 +39,7 @@ classDiagram
 
     Empleado <|-- EmpleadoTiempoCompleto
     Empleado <|-- EmpleadoMedioTiempo
-
+```
 
 ##  Ejercicio 5 - Vehículos
 
@@ -77,3 +77,4 @@ classDiagram
     Vehiculo <|-- Moto
     Auto <|-- AutoElectrico
     AutoElectrico ..|> Electrico
+```
