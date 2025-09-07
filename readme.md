@@ -23,8 +23,8 @@ src/
 classDiagram
     class Empleado {
         <<abstract>>
-        - nombre: string
-        - salarioBase: number
+        # nombre: string
+        # salarioBase: number
         + calcularSalario(): number
     }
 
