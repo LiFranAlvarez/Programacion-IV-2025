@@ -17,12 +17,9 @@ src/
 
 ## Diagramas UML
 
-
 ## Ejercicio 3 - Empleado
 
-
 ```mermaid
-
 classDiagram
     class Empleado {
         <<abstract>>
@@ -43,8 +40,10 @@ classDiagram
     Empleado <|-- EmpleadoTiempoCompleto
     Empleado <|-- EmpleadoMedioTiempo
 
+
 ##  Ejercicio 5 - Vehículos
 
+```mermaid
 classDiagram
     class Vehiculo {
         <<abstract>>
