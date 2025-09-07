@@ -1,0 +1,12 @@
+Repositorio de GitHub: 
+
+Integrantes del grupo:
+- Angelina Rossi
+- Lisandro Alvarez
+- Ana Paula Schechtel
+- Mateo Belatti
+
+Notas adicionales:
+
+- Los diagramas UML están documentados en el README del repositorio.
+- Cada ejercicio se encuentra en su respectiva carpeta dentro de src/.
