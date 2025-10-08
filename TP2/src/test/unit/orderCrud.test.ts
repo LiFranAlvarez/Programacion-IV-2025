@@ -52,7 +52,6 @@ describe('Peticiones Get CrudOrder', ()=>{
 describe('Peticiones Post CrudOrder', ()=>{
     beforeEach(()=>{
         crud.clear();
-        crud.addOrder(order1);
     });
     it('addOrder(), espera que se agregue una orden a una lista', ()=>{
         const id2 = "ORD-002";
@@ -70,6 +69,7 @@ describe('Peticiones Post CrudOrder', ()=>{
     });
 
     it('cancelOrder(), espera que una orden cambie de estado a cancelado',()=>{
+        crud.addOrder(order1);
         const ordenACancelar = crud.getOrderById(id);
         crud.cancelOrder(id, "el comprador se arrepintio");
         expect(ordenACancelar.getStatus).toBe('cancelled');
@@ -77,12 +77,17 @@ describe('Peticiones Post CrudOrder', ()=>{
     });
 
     it('confirmOrder(), espera que una orden cambie de estado a confirmado',()=>{
+        order1.setStatus = 'pending'
+        crud.addOrder(order1);
         const ordenAConfirmar = crud.getOrderById(id);
-        crud.confirmOrder(id);
-        expect(ordenAConfirmar.getStatus).toBe('confirmed');
+        expect(ordenAConfirmar.getStatus).toBe('pending')
+        const result = crud.confirmOrder(id);
+        expect(result.getStatus).toBe('confirmed');
     });
 
-    it('deliverOrder(), espera que una orden cambie de estado a deliver',()=>{
+    it('deliverOrder(), espera que una orden cambie de estado a deliver',async ()=>{
+        order1.setStatus = 'confirmed';
+        crud.addOrder(order1);
         const ordenADeliver = crud.getOrderById(id);
         crud.deliverOrder(id);
         expect(ordenADeliver.getStatus).toBe('delivered');
