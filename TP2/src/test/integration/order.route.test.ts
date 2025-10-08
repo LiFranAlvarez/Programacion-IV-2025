@@ -1,10 +1,9 @@
 import request from 'supertest';
-import { describe, it, expect } from 'vitest';
-import orderRoute from '../../routes/order.route';
+import { describe, it, expect, beforeEach } from 'vitest';
 import Server from '../../app';
 import { Order } from '../../models/order';
 import { ItemOrder } from '../../models/item';
-import { deepStrictEqual } from 'assert';
+import orderService from '../../services/order.service';
 
 const server = new Server(3000);
 const app = server.app;
@@ -56,6 +55,9 @@ describe('integracion GET /practico2/orders', () => {
 // orderRoute.post('/order/:idOrder/confirm', orderController.confirmOrder);
 // orderRoute.post('/order/:idOrder/deliver', orderController.deliveredOrder);
 describe('Integracion POST /practico2/orders', ()=>{
+    beforeEach(()=>{
+        orderService.clear()
+    })
     it('/order/add deberia devolver un 201 y un objeto Order', async()=>{
         const res = await request(app).post('/practico2/order/add').send(order1);
         expect(res.status).toBe(201);
@@ -63,20 +65,20 @@ describe('Integracion POST /practico2/orders', ()=>{
     });
     it('/order/:idOrder/cancel deberia devolver un 200 y status = cancel', async ()=>{
         await request(app).post('/practico2/order/add').send(order1);
-        const res = await request(app).post('/practico2/order/1/cancel').send({ cancelReason: 'el comprador se arrepintió' });
-        expect(res.status).toBe(200);
+        const res = await request(app).post('/practico2/order/1/cancel').send({ cancelReason: 'el comprador se arrepintió' }).expect(200);
+        expect(res.body).toHaveProperty('cancelReason', 'el comprador se arrepintió');
     });
     it('/order/:idOrder/confirm deberia devolver un 200 y status = confirmed', async ()=>{
-        await request(app).post('/practico2/order/add').send(order1);
-        const res = await request(app).post('/practico2/order/1/confirm');
-        expect(res.status).toBe(200);
-        expect(res.body.status).equals('confirmed');
+        await request(app).post('/practico2/order/add').send(order1).expect(201);
+        const res = await request(app).post('/practico2/order/1/confirm').expect(200);
+        expect(res.body).toHaveProperty('status', 'confirmed')
     });
     it('/order/:idOrder/deliver deberia devolver un 200 y status = deliver', async ()=>{
-        await request(app).post('/practico2/order/add').send(order1);
-        const res = await request(app).post('/practico2/order/1/deliver');
-        expect(res.status).toBe(200);
-        expect(res.body.status).equals('delivered');
+        await request(app).post('/practico2/order/add').send(order1).expect(201);
+        await request(app).post('/practico2/order/1/confirm').expect(200);
+        const res = await request(app).post('/practico2/order/1/deliver').expect(200);
+        expect(res.body).toHaveProperty('status', 'delivered')
+        
     });
 });
 
