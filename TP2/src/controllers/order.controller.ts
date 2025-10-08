@@ -3,6 +3,7 @@ import  OrderService  from "../services/order.service";
 import { Order, Status } from "../models/order";
 import { ItemOrder } from "../models/item";
 import orderService from "../services/order.service";
+import { HttpError } from "../common/httpError";
 
 class OrderController {
     
@@ -10,54 +11,44 @@ class OrderController {
         // ruta.get /orders
         try {
             const respuesta = OrderService.getOrders();
-            if (!respuesta) {
-                throw new Error("No se encontraron Ordenes");
-            };
             res.status(200).json(respuesta);
         } catch (error) {
             if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             }
         }
-    };//
+    };
     public getOrderdById( req: Request, res: Response ){
         // ruta.get /order/:id
         try {
             const idOrder = req.params.idOrder
             const resultado = OrderService.getOrderById(idOrder);
-            if (!resultado) {
-                throw new Error(`No se encontraron ordenes con ID: ${idOrder}`);
-            };
             res.status(200).json(resultado);
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(404).json({message: error.message});
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
             }
         }
-    };//
+    };
     public getSatusOrderById( req: Request, res: Response ){
         // ruta.get /order/:id/status
         try {
             const idOrder = req.params.idOrder;
             const resultado = OrderService.getSatusOrderById(idOrder);
-            if (!resultado) {
-                throw new Error(`No se encontraron ordenes con ID: ${idOrder}`);
-            };
             res.status(200).json(resultado);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
-            };
+            };;
         }
-    };//
+    };
     public getOrderForStatus( req: Request, res: Response ){
         // GET /orders/status/:status
         try {
             const status = req.params.status;
             const resultado = OrderService.getOrderForStatus(status as Status);
-            if (!resultado || resultado.length === 0) {
-                throw new Error(`No se encontraron ordenes con Status: ${status}`);
-            };
             res.status(200).json(resultado);
         } catch (error) {
             if (error instanceof Error) {
@@ -69,13 +60,12 @@ class OrderController {
         // ruta.post /order/add
         try {
             const {idOrder, items, address, total} = req.body;
-            const nuevaOrden: Order = OrderService.addOrder(new Order(idOrder, items as unknown as ItemOrder[], address, total));
-            if (!nuevaOrden) {
-                throw new Error("No se pudo crear la nueva orden");
-            }
+            const nuevaOrden = OrderService.addOrder(new Order(idOrder, items as unknown as ItemOrder[], address, total));
             res.status(201).json(nuevaOrden);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             };
         }
@@ -87,12 +77,11 @@ class OrderController {
             const { cancelReason } = req.body;
             console.log(`Se esta Cancelando la orden ID: ${idOrder} Razon: ${cancelReason}`);
             const ordenCancelada : Order = OrderService.cancelOrder(idOrder, cancelReason);
-            if (!ordenCancelada) {
-                    throw new Error("No se pudo cancelar la nueva orden");
-                }
             res.status(200).json(ordenCancelada);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             };
         }
@@ -103,12 +92,11 @@ class OrderController {
             const idOrder = req.params.idOrder
             console.log(`Se esta confirmando la orden ID: ${idOrder}`);
             const ordenConfirmada : Order = OrderService.confirmOrder(idOrder);
-            if (!ordenConfirmada) {
-                    throw new Error("No se pudo confirmar la nueva orden");
-                }
             res.status(200).json(ordenConfirmada);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             };
         }
@@ -124,7 +112,9 @@ class OrderController {
                 }
             res.status(200).json(ordenDeliver);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             };
         }
@@ -136,15 +126,12 @@ class OrderController {
             const {address} = req.body;
             console.log(address);
             console.log(idOrder);
-            
-            
             const ordenModificada: Order = OrderService.updateOrderAddress(idOrder, address);
-            if (!ordenModificada) {
-                    throw new Error("No se pudo entregar la nueva orden");
-                }
             res.status(200).json(ordenModificada);
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             };
         }
@@ -160,11 +147,13 @@ class OrderController {
             orderService.deleteOrder(idOrder);
             res.status(200).json({ordenEliminar, message: 'Eliminada' });
         } catch (error) {
-            if (error instanceof Error) {
+            if (error instanceof HttpError) {
+                res.status(error.codigo).json({message: error.message});
+            } else if (error instanceof Error) {
                 res.status(404).json({message: error.message});
             };
         }
     };
-}
+};
 
 export default new OrderController();
