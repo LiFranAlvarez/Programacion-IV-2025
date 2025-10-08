@@ -40,7 +40,7 @@ export class OrderService implements CrudOrdens{
         return true;
     };
     clear(): void {
-        throw new Error("Method not implemented.");
+        ModelOrder.clear();
     };
 };
 export default new OrderService();

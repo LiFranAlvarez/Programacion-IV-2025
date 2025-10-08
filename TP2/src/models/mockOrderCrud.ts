@@ -1,4 +1,5 @@
 import { CrudOrdens } from "./Interfaces/orderCrud.interface";
+import { HttpError } from "../common/httpError";
 import { Order, Status } from "./order";
 export class MockOrderCrud implements CrudOrdens{
     protected tamaño:number = 0;
@@ -12,7 +13,7 @@ export class MockOrderCrud implements CrudOrdens{
             return orden.getIdOrder === id;
         });
         if (!result) {
-            throw new Error("No existe orden con ese ID");
+            throw new HttpError(404 , "No existe orden con ese ID");
         }
         return result;
     };
@@ -32,8 +33,8 @@ export class MockOrderCrud implements CrudOrdens{
 // ---- POST ----
     addOrder(newOrder:Order): Order {
         const itemsNewOrder = newOrder.getItems;
-        if (itemsNewOrder.length <= 0 || itemsNewOrder.length > 5) {
-            throw new Error("Error en la cantidad de items asignados... lanzar un 422 si vacio");
+        if (itemsNewOrder.length === 0 ) {
+            throw new HttpError( 422 , "Error en la cantidad de items asignados");
             };
         this.orders.push(newOrder);
         return newOrder;
@@ -41,7 +42,7 @@ export class MockOrderCrud implements CrudOrdens{
     cancelOrder(idOrder:string, motivoCancelar:string): Order {
         const orderModify = this.getOrderById(idOrder);
         if (orderModify.getStatus === 'delivered') {
-            throw new Error("El pedido esta entregado... lanzar un 409");
+            throw new HttpError( 409 ,"Pedido Entregado");
         }
         orderModify.setStatus = 'cancelled';
         orderModify.setCancelReason = motivoCancelar;
@@ -49,11 +50,21 @@ export class MockOrderCrud implements CrudOrdens{
     }
     confirmOrder(idOrder:string): Order {
         const orderModify = this.getOrderById(idOrder);
+        console.log(orderModify instanceof Order); // devuelve True
+        console.log(orderModify.getStatus); // devuelve pending
+        if (orderModify.getStatus !== 'pending') {
+            throw new HttpError(409, `Error, la orden esta ${orderModify.getStatus}`);
+        }
         orderModify.setStatus = 'confirmed';
         return orderModify;
-    }
+    };
     deliverOrder(idOrder:string): Order {
         const orderModify = this.getOrderById(idOrder);
+        console.log(orderModify instanceof Order);
+        console.log(orderModify.getStatus);
+        if (orderModify.getStatus !== 'confirmed') {
+            throw new HttpError(409, `Error, la orden esta ${orderModify.getStatus}`);
+        }
         orderModify.setStatus = 'delivered';
         return orderModify;
     }
