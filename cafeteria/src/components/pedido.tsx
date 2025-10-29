@@ -1,18 +1,27 @@
 import '../styles/pedido.css'
 import { useEffect } from "react"
 import { Product as ProductType} from "../interface/producto.interface";
-type PedidoProps ={
-    pedido : ProductType[]
-}
-export const Pedido = ({pedido} : PedidoProps) => {
-    useEffect(() =>{}, [pedido])
+type CallBackEliminar = (id : string)=> void;
+type PedidoProps = {
+    pedido : ProductType[],
+    onEliminar  : CallBackEliminar   
+    }
+export const Pedido = ({pedido, onEliminar }: PedidoProps,) => {
+    useEffect(() =>{}, [pedido]);
+    const handleClickEliminar = (id: string ) => {
+        onEliminar(id);
+    }
     return (
         <div className="pedido-conteinter">
             <ul>
                 {
-                    // CORRECCIÓN 2: Usamos ( ) en el map para el return
                     pedido.map((item: ProductType) => (
-                        <li key={item.id}>{item.name} - {item.price}</li>
+                        <li key={item.id}>
+                            {item.name} - {item.price} 
+                            <button onClick={(e) =>{
+                                e.stopPropagation();
+                                handleClickEliminar(item.id)}}>Eliminar</button>
+                            </li>
                     ))
                 }
             </ul>

@@ -32,6 +32,18 @@ export function Menu() {
                 return [...estadoAnterior, productoAgregar]
             })
         };
+    const handleEliminar = (idEliminar : string ) => {
+        setOrder((pedidoActual) => {
+            const indexEliminar = order.findIndex(item => item.id === idEliminar);
+            if (indexEliminar === -1) {
+                console.error("No hay item para eliminar");
+                return  pedidoActual;
+            }
+            const nuevaLista = [...pedidoActual];
+            nuevaLista.splice(indexEliminar, 1);
+            return nuevaLista;
+        })
+    }
     return(
         <div className="menu">
             <div className="productos">
@@ -47,7 +59,7 @@ export function Menu() {
             }   </ul>
             </div>
             <div className="pedidos">
-                <Pedido pedido={order} />
+                <Pedido pedido={order} onEliminar={handleEliminar} />
             </div>
         </div>
     )

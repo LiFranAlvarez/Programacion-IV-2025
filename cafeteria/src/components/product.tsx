@@ -9,7 +9,7 @@ type ProductProps ={
 }
 const Product = ({id, name, price, onAgregar}: ProductProps ) => {
     const handleClickAgregar = ()=>{
-    onAgregar({id, name, price})
+        onAgregar({id, name, price})
     }
         return(
             <div className="product">
