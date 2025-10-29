@@ -1,7 +1,6 @@
 import { render, screen, waitFor} from '@testing-library/react';
 //import userEvent from '@testing-library/user-event';
-import Menu from '../components/menu';
-
+import { Menu } from '../components/menu';
 test('Menu test', async ()=>{
     render(<Menu />);
     await waitFor(()=>{

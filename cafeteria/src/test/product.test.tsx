@@ -8,7 +8,7 @@ test('Product test', ()=>{
         price: 350
     }
     render(<Product {...producto}  />);
-    expect(screen.getAllByText(/Café Americano/)).toBeInTheDocument();
-    expect(screen.getAllByText(`${350}`)).toBeInTheDocument();
+    expect(screen.getByText(/Café Americano/)).toBeInTheDocument();
+    expect(screen.getByText(/350/)).toBeInTheDocument();
     expect(screen.getByRole('button')).not.toBeDisabled();
 })
