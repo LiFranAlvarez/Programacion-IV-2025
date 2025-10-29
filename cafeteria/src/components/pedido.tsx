@@ -16,6 +16,12 @@ export const Pedido = ({pedido} : PedidoProps) => {
                     ))
                 }
             </ul>
+            <div className="total">
+                total: ${pedido.reduce((acumulador, item)=>{
+                        acumulador += item.price;
+                        return acumulador;
+                }, 0)}
+            </div>
         </div>
     )
 }

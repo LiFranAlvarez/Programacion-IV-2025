@@ -15,6 +15,7 @@ test('Menu test', async ()=>{
         const user = userEvent.setup();
         const boton = screen.getAllByRole('button');
         await user.click(boton[0]);
-        expect(screen.getByText('Café Americano - 350')).toBeInTheDocument();   
+        expect(screen.getByText('Café Americano - 350')).toBeInTheDocument();
+        expect(screen.getByText(/total: \$\d+/i)).toBeInTheDocument(); 
 
 })
