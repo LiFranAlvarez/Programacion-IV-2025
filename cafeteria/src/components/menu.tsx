@@ -2,9 +2,12 @@ import '../styles/menu.css'
 import { useState, useEffect } from "react";
 import { Product as ProductType} from "../interface/producto.interface";
 import Product from "./product";
+import { Pedido } from './pedido';
 
 export function Menu() {
     const [products, setProducts] = useState<ProductType[]>([]);
+    const [ order, setOrder] = useState<ProductType[]>([]);
+
     useEffect(() => {
         console.log('Adentro del effect');
         const fetchProducts = async() =>{
@@ -22,18 +25,30 @@ export function Menu() {
                 console.log('No renderizo Menu: ' + error);
             }
         }
-        fetchProducts()
+        fetchProducts();
     }, []);
-    
+    const handleProduct = (productoAgregar : ProductType) => {
+            setOrder((estadoAnterior) => {
+                return [...estadoAnterior, productoAgregar]
+            })
+        };
     return(
         <div className="menu">
-                <ul>{
+            <div className="productos">
+                    <ul>{
                     products.map(
                         data =>{
-                            return <li key={data.id}><Product {...data}/></li>
+                            return <li key={data.id}><Product 
+                                {...data}
+                                onAgregar={handleProduct}
+                                /></li>
                         }
                     )
             }   </ul>
+            </div>
+            <div className="pedidos">
+                <Pedido pedido={order} />
+            </div>
         </div>
     )
 } 
