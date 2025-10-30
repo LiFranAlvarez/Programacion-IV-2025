@@ -2,15 +2,21 @@ import '../styles/pedido.css'
 import { useEffect } from "react"
 import { Product as ProductType} from "../interface/producto.interface";
 type CallBackEliminar = (id : string)=> void;
+type CallBackEnviarPedido = () => void;
 type PedidoProps = {
     pedido : ProductType[],
-    onEliminar  : CallBackEliminar   
+    onEliminar  : CallBackEliminar,
+    onEnviarPedido : CallBackEnviarPedido;
     }
-export const Pedido = ({pedido, onEliminar }: PedidoProps,) => {
-    useEffect(() =>{}, [pedido]);
-    const handleClickEliminar = (id: string ) => {
-        onEliminar(id);
-    }
+    export const Pedido = ({pedido, onEliminar, onEnviarPedido }: PedidoProps,) => {
+        useEffect(() =>{}, [pedido]);
+        const handleClickEliminar = (id: string ) => {
+            onEliminar(id);
+        }
+        const handleEnviarPedido = () =>{
+            onEnviarPedido();
+        }
+
     return (
         <div className="pedido-conteinter">
             <ul>
@@ -26,6 +32,7 @@ export const Pedido = ({pedido, onEliminar }: PedidoProps,) => {
                 }
             </ul>
             <div className="total">
+                <button onClick={handleEnviarPedido}>Enviar Pedido</button>
                 total: ${pedido.reduce((acumulador, item)=>{
                         acumulador += item.price;
                         return acumulador;

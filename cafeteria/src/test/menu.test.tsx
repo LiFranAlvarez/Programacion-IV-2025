@@ -1,6 +1,7 @@
 import { render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Menu } from '../components/menu';
+
 test('Menu test', async ()=>{
     render(<Menu />);
     await waitFor(()=>{
@@ -12,10 +13,29 @@ test('Menu test', async ()=>{
         expect(screen.getAllByRole('listitem')).toHaveLength(4);
     });
     // simulacion de click
+    //HU3
         const user = userEvent.setup();
-        const boton = screen.getAllByRole('button');
-        await user.click(boton[0]);
+        const botones = screen.getAllByRole('button', {name: /Agregar/});
+        await user.click(botones[0]);
         expect(screen.getByText('Café Americano - 350')).toBeInTheDocument();
-        expect(screen.getByText(/total: \$\d+/i)).toBeInTheDocument(); 
+        expect(screen.getByText(/total: \$\d+/i)).toBeInTheDocument();
+    //HU4
+        const botonesEliminar = screen.getAllByRole('button', {name: /Eliminar/});
+        const botonEliminar = botonesEliminar[0];
+        expect(botonEliminar).toBeInTheDocument();
+        await user.click(botonEliminar);
+        expect(botonEliminar).not.toBeInTheDocument();
+    //HU5
+        await user.click(botones[0]);
+        await user.click(botones[1]);
+        await user.click(botones[2]);
+        const botonEnviar = screen.getAllByRole('button', {name: /Enviar Pedido/})[0];
+        await user.click(botonEnviar)
+        await waitFor(()=>{
+            //no se como mirar el mensaje de confirmado
+        })
+
+        
+    
 
 })

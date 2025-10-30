@@ -7,6 +7,8 @@ import { Pedido } from './pedido';
 export function Menu() {
     const [products, setProducts] = useState<ProductType[]>([]);
     const [ order, setOrder] = useState<ProductType[]>([]);
+    const [cargando, setCargando] = useState<boolean>(true);
+    const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
         console.log('Adentro del effect');
@@ -21,12 +23,15 @@ export function Menu() {
                 const data = await response.json()
                 setProducts(data);
             } catch (error) {
+                setError(true);
                 console.error(error);
-                console.log('No renderizo Menu: ' + error);
-            }
+            } finally {
+                setCargando(false);
+                }
         }
         fetchProducts();
     }, []);
+    
     const handleProduct = (productoAgregar : ProductType) => {
             setOrder((estadoAnterior) => {
                 return [...estadoAnterior, productoAgregar]
@@ -44,6 +49,24 @@ export function Menu() {
             return nuevaLista;
         })
     }
+    const handleEnviarPedido = async ()=>{
+        await fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // 3. AQUÍ ES DONDE LE PASAS TU ESTADO 'order'
+            //    JSON.stringify() lo convierte en texto para enviarlo
+            body: JSON.stringify(order) 
+        });
+        setOrder([]);
+    }
+    if (cargando) {
+        return <div className="cargando">Estan Cargando los productos</div>
+    }
+    if (error) {
+        <div className="error">Error al cargar los productos</div>
+    }
     return(
         <div className="menu">
             <div className="productos">
@@ -59,8 +82,10 @@ export function Menu() {
             }   </ul>
             </div>
             <div className="pedidos">
-                <Pedido pedido={order} onEliminar={handleEliminar} />
+                <Pedido pedido={order} onEliminar={handleEliminar} onEnviarPedido={handleEnviarPedido} />
             </div>
         </div>
     )
+
+    
 } 
