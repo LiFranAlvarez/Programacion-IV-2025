@@ -1,7 +1,6 @@
-import '../styles/product.css';
 type onAgregarCallBack = ( producto : {id: string, name: string, price: number}) => void;
 
-type ProductProps ={
+interface ProductProps {
     id : string,
     name : string,
     price : number,

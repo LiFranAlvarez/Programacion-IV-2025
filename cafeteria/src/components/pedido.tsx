@@ -1,9 +1,8 @@
-import '../styles/pedido.css'
 import { useEffect } from "react"
 import { Product as ProductType} from "../interface/producto.interface";
 type CallBackEliminar = (id : string)=> void;
 type CallBackEnviarPedido = () => void;
-type PedidoProps = {
+interface PedidoProps  {
     pedido : ProductType[],
     onEliminar  : CallBackEliminar,
     onEnviarPedido : CallBackEnviarPedido;

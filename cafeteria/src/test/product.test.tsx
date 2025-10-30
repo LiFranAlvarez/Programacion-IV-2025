@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import Product  from '../components/product';
-type onAgregarCallBack = ( producto : {id: string, name: string, price: number}) => void;
 
 test('Product test', ()=>{
     const producto = {

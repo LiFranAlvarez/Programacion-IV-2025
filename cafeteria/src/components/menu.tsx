@@ -1,4 +1,3 @@
-import '../styles/menu.css'
 import { useState, useEffect } from "react";
 import { Product as ProductType} from "../interface/producto.interface";
 import Product from "./product";
@@ -55,8 +54,6 @@ export function Menu() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            // 3. AQUÍ ES DONDE LE PASAS TU ESTADO 'order'
-            //    JSON.stringify() lo convierte en texto para enviarlo
             body: JSON.stringify(order) 
         });
         setOrder([]);
