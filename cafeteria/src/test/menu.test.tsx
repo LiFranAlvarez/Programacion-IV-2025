@@ -48,13 +48,9 @@ describe('Menu test',  ()=>{
         await user.click(botones[2]);
         const botonEnviar = screen.getAllByRole('button', {name: /Enviar Pedido/})[0];
         await user.click(botonEnviar)
-        await waitFor(()=>{
-            //no se como mirar el mensaje de confirmado
-        })
-    })
-        
+        const mensaje = await screen.findByText(/Orden creada y añadida al mock list/i)
+        expect(mensaje).toBeInTheDocument()
 
-        
-    
+    })
 
 })

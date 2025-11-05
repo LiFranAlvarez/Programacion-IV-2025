@@ -1,8 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { Product as ProductType} from '../../interface/producto.interface';
 
-// --- TU MOCK ---
-// Exportamos un array de productos que cumplen con el tipo Product
 export const productosMock: ProductType[] = [
     {
     id: '1',
@@ -33,9 +31,8 @@ export const handlers = [
         const newOrder = (await request.json()) as ProductType[];
         pedidoOrders.push(newOrder);
         return HttpResponse.json(
-            { message: 'Order created successfully and added to mock list', orderId: `MOCK-${pedidoOrders.length}` },
-            { status: 201 } // 201 es el código estándar para una creación exitosa
+            { message: 'Orden creada y añadida al mock list', orderId: `MOCK-${pedidoOrders.length}` },
+            { status: 201 } 
         );
     }),
 ];
-// Enable API mocking anywhere.

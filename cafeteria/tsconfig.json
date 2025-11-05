@@ -19,9 +19,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-
-    /* AQUÍ ESTÁ LA LÍNEA QUE NECESITAS */
-    "types": ["vite/client", "vitest/globals"]
+    "types": ["vite/client", "vitest/globals", "node"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

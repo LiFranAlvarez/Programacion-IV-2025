@@ -8,15 +8,16 @@ export function Menu() {
     const [ order, setOrder] = useState<ProductType[]>([]);
     const [cargando, setCargando] = useState<boolean>(true);
     const [error, setError] = useState<boolean>(false);
+    const [confirmacion, setConfirmacion] = useState<string | null>(null)
 
     useEffect(() => {
         console.log('Adentro del effect');
         const fetchProducts = async() =>{
             try {
                 console.log('adentro de fetchProd');
-                const response = await fetch('api/menu');
+                const response = await fetch('/api/menu');
                 if (!response.ok) {
-                        console.log('no cargaron paciente');
+                        console.log('no cargaron producto');
                         throw new Error("Error no cargaron los productos");
                 }
                 const data = await response.json()
@@ -48,41 +49,44 @@ export function Menu() {
             return nuevaLista;
         })
     }
-    const handleEnviarPedido = async ()=>{
-        await fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order) 
-        });
-        setOrder([]);
+   const handleEnviarPedido = async () => {
+    const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order),
+    })
+    const data = await response.json()
+    setConfirmacion(data.message)
+    setOrder([])
     }
+
     if (cargando) {
         return <div className="cargando">Estan Cargando los productos</div>
     }
     if (error) {
-        <div className="error">Error al cargar los productos</div>
+        return <div className="error">Error al cargar los productos</div>
     }
-    return(
+    return (
         <div className="menu">
             <div className="productos">
-                    <ul>{
-                    products.map(
-                        data =>{
-                            return <li key={data.id}><Product 
-                                {...data}
-                                onAgregar={handleProduct}
-                                /></li>
-                        }
-                    )
-            }   </ul>
+            <ul>
+                {products.map(data => (
+                <li key={data.id}>
+                    <Product {...data} onAgregar={handleProduct} />
+                </li>
+                ))}
+            </ul>
             </div>
-            <div className="pedidos">
-                <Pedido pedido={order} onEliminar={handleEliminar} onEnviarPedido={handleEnviarPedido} />
-            </div>
-        </div>
-    )
 
-    
+            <div className="pedidos">
+            <Pedido pedido={order} onEliminar={handleEliminar} onEnviarPedido={handleEnviarPedido}/>
+            </div>
+            {confirmacion && (
+            <div role="alert" style={{ marginTop: '1rem', color: 'green' }}>
+                {confirmacion}
+            </div>
+            )}
+        </div>
+        )
+
 } 
